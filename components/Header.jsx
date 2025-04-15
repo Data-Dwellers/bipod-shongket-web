@@ -1,3 +1,4 @@
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 
 export const Header = () => {
@@ -10,6 +11,7 @@ export const Header = () => {
                 <Button>Log In</Button>
                 <Button>Register</Button>
                 <Button>About</Button>
+                <ThemeToggle></ThemeToggle>
             </div>
         </div>
     );

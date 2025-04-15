@@ -1,4 +1,5 @@
-import { Geist, Geist_Mono, Roboto, Roboto_Mono } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
 const robotoSans = Roboto({
@@ -18,11 +19,18 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}
             >
-                {children}
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                </ThemeProvider>
             </body>
         </html>
     );
