@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import AuthProvider from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
@@ -30,8 +31,10 @@ export default function RootLayout({ children }) {
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Header></Header>
-                    {children}
+                    <AuthProvider>
+                        <Header></Header>
+                        {children}
+                    </AuthProvider>
                 </ThemeProvider>
             </body>
         </html>
