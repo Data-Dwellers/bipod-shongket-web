@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
