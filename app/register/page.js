@@ -6,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { AuthContext } from "@/providers/AuthProvider";
 import { createUser } from "@/services/userService";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export default function LogIn() {
+    const router = useRouter();
     // Setup firebase auth functions
     const authContext = useContext(AuthContext);
     const {
@@ -29,6 +31,7 @@ export default function LogIn() {
                 createUser({ ...data })
                     .then(async () => {
                         console.log("User saved in DB");
+                        router.push("/");
                     })
                     .catch((error) => {
                         setAuthError(error);

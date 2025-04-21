@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthContext } from "@/providers/AuthProvider";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export default function LogIn() {
+    const router = useRouter();
     // Setup firebase auth functions
     const authContext = useContext(AuthContext);
     const {
@@ -25,6 +27,7 @@ export default function LogIn() {
             .signIn(data.email, data.password)
             .then(async (result) => {
                 console.log(result.user);
+                router.push("/");
             })
             .catch((error) => {
                 setAuthError(error.message);
