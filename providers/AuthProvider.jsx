@@ -1,6 +1,7 @@
 "use client";
 
 import auth from "@/auth/firebase.config";
+import { getUsers } from "@/services/userService";
 // import useServer from "@/hooks/useServer";
 import {
     GithubAuthProvider,
@@ -102,7 +103,14 @@ const AuthProvider = ({ children }) => {
     // const { getUserByEmail } = useServer();
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            getUsers({ email: currentUser.email })
+                .then((data) => {
+                    setUser(currentUser);
+                    setUser(...user, ...data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             setLoading(false);
         });
 
