@@ -11,19 +11,13 @@ import { Controller, useForm } from "react-hook-form";
 export default function LogIn() {
     // Setup firebase auth functions
     const authContext = useContext(AuthContext);
-    const { control, handleSubmit } = useForm();
-    const [error, setError] = useState();
-    // const googleLoginHandler = async () => {
-    //     authContext
-    //         .googleSignIn()
-    //         .then(async (result) => {
-    //             console.log(result.user);
-    //         })
-    //         .catch((error) => {
-    //             // setError(error.message);
-    //             console.error(error);
-    //         });
-    // };
+    const {
+        control,
+        handleSubmit,
+        setError,
+        formState: { errors },
+    } = useForm();
+    const [authError, setAuthError] = useState();
 
     const submitHandler = async (data) => {
         console.log(`Trying to log in ${data}`);
@@ -33,6 +27,8 @@ export default function LogIn() {
                 console.log(result.user);
             })
             .catch((error) => {
+                setAuthError(error.message);
+                setError(errors);
                 console.error(error);
             });
     };
@@ -42,13 +38,13 @@ export default function LogIn() {
             <h1 className="text-5xl p-5 text-red-600">
                 Log In with your account
             </h1>
-            <div className="grid w-full gap-6">
+            <div className="grid gap-6 min-w-96">
                 <form
                     className="space-y-4"
                     onSubmit={handleSubmit(submitHandler)}
                 >
                     <div>
-                        <Label>Email</Label>
+                        <Label className="mb-2">Email</Label>
                         <Controller
                             control={control}
                             name="email"
@@ -68,7 +64,7 @@ export default function LogIn() {
                         />
                     </div>
                     <div>
-                        <Label>Password</Label>
+                        <Label className="mb-2">Password</Label>
                         <Controller
                             control={control}
                             name="password"
@@ -86,40 +82,33 @@ export default function LogIn() {
                             )}
                         />
                     </div>
-                    {error && <span className="text-destructive">{error}</span>}
+                    {authError && (
+                        <span className="text-destructive">{authError}</span>
+                    )}
+                    {errors &&
+                        Object.entries(errors).map(([field, err]) => (
+                            <p key={field} className="text-destructive">
+                                {err.message}
+                            </p>
+                        ))}
                     <Button type="submit" className="w-full">
                         Log In
                     </Button>
                 </form>
                 <p className="px-8 text-center text-sm text-muted-foreground">
-                    {"Don't have an account ? "}
-                    <span
-                        className="cursor-pointer font-semibold underline underline-offset-4 hover:text-primary"
-                        onClick={() => router.push("/register")}
-                    >
-                        register
-                    </span>
+                    {"Already have an account ? "}
+                    <Link href="/register">
+                        <span className="cursor-pointer font-semibold underline underline-offset-4 hover:text-primary">
+                            register
+                        </span>
+                    </Link>
                     .
                 </p>
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
                     </div>
-                    {/* <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground">
-                            Or continue with
-                        </span>
-                    </div> */}
                 </div>
-                {/* <Button
-                    variant="outline"
-                    type="button"
-                    onClick={googleLoginHandler}
-                    disabled
-                >
-                    <Icons.google className="mr-2 h-4 w-4" />
-                    Google
-                </Button> */}
             </div>
         </div>
     );
