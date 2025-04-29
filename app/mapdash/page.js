@@ -1,8 +1,11 @@
 "use client";
 
+import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import "leaflet/dist/leaflet.css";
+
 import { getSOSRequests } from "@/services/sosRequestService";
 
 const MapContainer = dynamic(

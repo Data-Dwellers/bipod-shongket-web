@@ -32,6 +32,9 @@ export default function Header() {
               </Link>
             </>
           )}
+          <Link href="/allsosrequest">
+            <Button className="bg-red-600">See All Global Request</Button>
+          </Link>
           <Link href="/mapdash">
             <Button className="bg-red-600">MAP</Button>
           </Link>
