@@ -21,7 +21,7 @@ export default function Mapdash() {
       center={position}
       zoom={9}
       scrollWheelZoom={true}
-      className="h-120 w-full"
+      className="h-120 w-full z-0"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
