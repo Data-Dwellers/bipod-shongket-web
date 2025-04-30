@@ -3,7 +3,7 @@
 import { getSOSRequests } from "@/services/sosRequestService";
 import { useState, useEffect } from "react";
 
-export default function allSosRequest() {
+export default function AllSosRequest() {
   const [sosreqs, setsosreqs] = useState([]);
 
   useEffect(() => {
@@ -13,9 +13,9 @@ export default function allSosRequest() {
         if (result && result.data) {
           setsosreqs(result.data);
         } else {
-          console.error("Failed to fetch SOS requests:", response.message);
+          console.error("Failed to fetch SOS requests:", result.message);
         }
-      } catch {
+      } catch (error) {
         console.error("Error fetching SOS requests:", error);
       }
     }
