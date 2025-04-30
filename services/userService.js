@@ -1,6 +1,6 @@
 import axiosClient from "./axiosBase";
 
-export const createUser = async (userData) => {
+export const createUserDB = async (userData) => {
     try {
         const response = await axiosClient.post("/api/users", userData);
         return response.data;

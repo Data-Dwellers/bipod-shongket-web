@@ -1,7 +1,8 @@
 "use client";
 
 import auth from "@/auth/firebase.config";
-import { getUsers } from "@/services/userService";
+import { getUsers, createUserDB } from "@/services/userService";
+
 // import useServer from "@/hooks/useServer";
 import {
     GithubAuthProvider,
@@ -31,14 +32,24 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(true);
 
-    const createUser = async (email, password) => {
+    const createUser = async (data) => {
         setLoading(true);
         try {
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
-                email,
-                password
+                data.email,
+                data.password
             );
+            if (userCredential.user.email) {
+                const { password, ...dataWithoutPassword } = data;
+                const dbReply = await createUserDB({ ...dataWithoutPassword });
+                if (dbReply.success) {
+                    console.log("User saved in DB");
+                } else {
+                    console.log("Error saving user in DB");
+                }
+            }
+
             setLoading(false);
             return userCredential;
         } catch (error) {
@@ -103,17 +114,29 @@ const AuthProvider = ({ children }) => {
     // const { getUserByEmail } = useServer();
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-            getUsers({ email: currentUser?.email })
-                .then((data) => {
-                    setUser(currentUser);
-                    setUser(...user, ...data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            if (currentUser) {
+                setUser(currentUser);
+                getUsers({ email: currentUser?.email })
+                    .then((dbData) => {
+                        console.log("Data from DB", dbData.data[0]);
+                        // setUser(currentUser);
+                        if (dbData.data && dbData.data.lenth > 0) {
+                            setUser(dbData.data[0]);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(
+                            "Error fetching user data from DB :",
+                            error
+                        );
+                        console.log(error);
+                    });
+            } else {
+                setUser(null);
+                setLoading(false);
+            }
             setLoading(false);
         });
-
         return () => {
             unSubscribe();
         };

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthContext } from "@/providers/AuthProvider";
-import { createUser } from "@/services/userService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -25,17 +24,10 @@ export default function LogIn() {
     const submitHandler = async (data) => {
         console.log(`Trying to log in ${data}`);
         authContext
-            .createUser(data.email, data.password)
+            .createUser({ ...data })
             .then(async (result) => {
                 console.log(result.user);
-                createUser({ ...data })
-                    .then(async () => {
-                        console.log("User saved in DB");
-                        router.push("/");
-                    })
-                    .catch((error) => {
-                        setAuthError(error);
-                    });
+                router.push("/");
             })
             .catch((error) => {
                 setAuthError(error.message);
