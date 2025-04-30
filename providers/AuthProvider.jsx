@@ -113,16 +113,18 @@ const AuthProvider = ({ children }) => {
 
     // const { getUserByEmail } = useServer();
     useEffect(() => {
-        const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setLoading(true);
             if (currentUser) {
-                setUser(currentUser);
-                getUsers({ email: currentUser?.email })
+                // setUser(currentUser);
+                await getUsers({ email: currentUser?.email })
                     .then((dbData) => {
                         console.log("Data from DB", dbData.data[0]);
                         // setUser(currentUser);
-                        if (dbData.data && dbData.data.lenth > 0) {
+                        if (dbData.data && dbData.data.length > 0) {
                             setUser(dbData.data[0]);
                         }
+                        setLoading(false);
                     })
                     .catch((error) => {
                         console.error(
@@ -130,12 +132,12 @@ const AuthProvider = ({ children }) => {
                             error
                         );
                         console.log(error);
+                        setLoading(false);
                     });
             } else {
                 setUser(null);
                 setLoading(false);
             }
-            setLoading(false);
         });
         return () => {
             unSubscribe();
