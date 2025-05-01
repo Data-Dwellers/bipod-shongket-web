@@ -25,6 +25,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import Link from "next/link";
 
 export default function Community() {
     const { user } = useContext(AuthContext);
@@ -38,7 +39,11 @@ export default function Community() {
             try {
                 const result = await getReports();
                 if (result && result.data) {
-                    setReports(result.data);
+                    // Sort reports by reportingDate in descending order (newest first)
+                    const sortedReports = [...result.data].sort((a, b) =>
+                        new Date(b.reportingDate) - new Date(a.reportingDate)
+                    );
+                    setReports(sortedReports);
                 }
                 setLoading(false);
             } catch (error) {
@@ -98,12 +103,26 @@ export default function Community() {
 
     return (
         <div className="flex flex-col w-full justify-center items-center gap-6 p-6">
+            <Card className="w-full max-w-7xl">
+                <CardContent className="flex justify-around items-center">
+                    <h1 className="font-bold text-xl"><span className="text-red-600">Bipod</span> Shongket <span className="text-green-600">Community</span></h1>
+                    <Link href="/community-post">
+                        <Button>Make A New Report</Button>
+                    </Link>
+                </CardContent>
+            </Card>
             <AlertDialog>
                 {reports.map((report) => (
                     <Card key={report._id} className="max-w-7xl w-full">
                         <CardHeader>
                             <CardTitle className="text-red-600">{report.incedentType}</CardTitle>
-                            <CardDescription>Reported on: {new Date(report.reportingDate).toLocaleDateString()}</CardDescription>
+                            <CardDescription>
+
+                                Reported by : {report && report.ownerName} ({report && report.owner})
+                                <br></br>
+                                Reported on: {new Date(report.reportingDate).toLocaleDateString()}
+
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="flex-grow wrap-break-word">
                             <p className="mb-4">{report.description}</p>
@@ -133,6 +152,8 @@ export default function Community() {
                     <AlertDialogHeader>
                         <AlertDialogTitle className="text-red-600">{selectedReport?.incedentType}</AlertDialogTitle>
                         <AlertDialogDescription>
+                            Reported by : {selectedReport && selectedReport.ownerName} ({selectedReport && selectedReport.owner})
+                            <br></br>
                             Reported on: {selectedReport && new Date(selectedReport.reportingDate).toLocaleDateString()}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
