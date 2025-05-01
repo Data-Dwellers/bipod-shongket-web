@@ -30,11 +30,9 @@ export function UserNav() {
                         <Avatar className="h-8 w-8">
                             <AvatarImage
                                 src={user.photoURL ?? ""}
-                                alt={user.displayName ?? ""}
+                                alt={user.name ?? ""}
                             />
-                            <AvatarFallback>
-                                {user?.displayName?.[0]}
-                            </AvatarFallback>
+                            <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
                         </Avatar>
                     </Button>
                 </DropdownMenuTrigger>
@@ -42,7 +40,7 @@ export function UserNav() {
                     <DropdownMenuLabel className="font-normal">
                         <div className="flex flex-col space-y-1">
                             <p className="text-sm font-medium leading-none">
-                                {user?.displayName}
+                                {user?.name}
                             </p>
                             <p className="text-xs leading-none text-muted-foreground">
                                 {user?.email}
@@ -51,6 +49,9 @@ export function UserNav() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
+                        <Link href={"/profile"}>
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                        </Link>
                         <Link href={"/dashboard"}>
                             <DropdownMenuItem>Dashboard</DropdownMenuItem>
                         </Link>
