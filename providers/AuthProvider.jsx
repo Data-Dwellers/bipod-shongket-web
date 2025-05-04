@@ -35,20 +35,31 @@ const AuthProvider = ({ children }) => {
     const createUser = async (data) => {
         setLoading(true);
         try {
+            // First create the user in Firebase
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 data.email,
                 data.password
             );
-            if (userCredential.user.email) {
-                const { password, ...dataWithoutPassword } = data;
-                const dbReply = await createUserDB({ ...dataWithoutPassword });
-                if (dbReply.success) {
-                    console.log("User saved in DB");
-                } else {
-                    console.log("Error saving user in DB");
-                }
-            }
+
+            // Remove password from data before storing in DB
+            const { password, ...dataWithoutPassword } = data;
+
+            // Use Promise.all to handle both operations after Firebase auth
+            await Promise.all([
+                // Update user profile if needed
+                updateProfile(userCredential.user, {
+                    displayName: data.name || data.displayName,
+                }),
+                // Save user to database
+                createUserDB({ ...dataWithoutPassword }).then((dbReply) => {
+                    if (dbReply.success) {
+                        console.log("User saved in DB");
+                    } else {
+                        console.log("Error saving user in DB");
+                    }
+                }),
+            ]);
 
             setLoading(false);
             return userCredential;
@@ -113,25 +124,29 @@ const AuthProvider = ({ children }) => {
 
     // const { getUserByEmail } = useServer();
     useEffect(() => {
-        const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setLoading(true);
             if (currentUser) {
-                // setUser(currentUser);
-                await getUsers({ email: currentUser?.email })
-                    .then((dbData) => {
+                // Use Promise.all to handle both Firebase and DB operations concurrently
+                Promise.all([
+                    Promise.resolve(currentUser),
+                    getUsers({ email: currentUser?.email }),
+                ])
+                    .then(([firebaseUser, dbData]) => {
                         console.log("Data from DB", dbData.data[0]);
-                        // setUser(currentUser);
                         if (dbData.data && dbData.data.length > 0) {
                             setUser(dbData.data[0]);
+                        } else {
+                            // Fallback to Firebase user if DB data isn't available
+                            setUser(firebaseUser);
                         }
-                        setLoading(false);
                     })
                     .catch((error) => {
-                        console.error(
-                            "Error fetching user data from DB :",
-                            error
-                        );
-                        console.log(error);
+                        console.error("Error processing user data:", error);
+                        // Still set the Firebase user on error to maintain authentication state
+                        setUser(currentUser);
+                    })
+                    .finally(() => {
                         setLoading(false);
                     });
             } else {
@@ -139,6 +154,7 @@ const AuthProvider = ({ children }) => {
                 setLoading(false);
             }
         });
+
         return () => {
             unSubscribe();
         };
