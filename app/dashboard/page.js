@@ -4,17 +4,19 @@ import SOSRequestCard from "@/components/SOSRequestCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { AuthContext } from "@/providers/AuthProvider";
+import { getLocationName } from "@/services/locationService";
 import {
   createSOSRequest,
   deleteSOSRequest,
   getSOSRequests,
 } from "@/services/sosRequestService";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [reply, setReply] = useState(null);
+  const [location, setLocation] = useState(null);
   const authContext = useContext(AuthContext);
   const handleSendSOS = async () => {
     setIsLoading(true);
@@ -34,11 +36,14 @@ export default function Dashboard() {
             };
 
             const result = await createSOSRequest(sosData);
+            await getLocationName(position.coords.latitude, position.coords.longitude).then((locationResult) => {
+              setLocation(locationResult)
+            })
 
             if (result) {
               setMessage(
                 result.message ||
-                  "Your emergency signal has been sent successfully."
+                "Your emergency signal has been sent successfully."
               );
             } else {
               setMessage("Failed to send SOS request");
@@ -111,6 +116,9 @@ export default function Dashboard() {
   return (
     <>
       <div className="space-y-10 p-10">
+        <h1 className="text-5xl font-black">
+          Your location is : {location}
+        </h1>
         <h1 className="text-5xl font-black">
           This is a test button to send SOS
         </h1>
