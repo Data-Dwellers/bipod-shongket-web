@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getSpecialUsers, createSpecialUser, updateSpecialUser } from '@/services/specialUserService';
 
 export default function AdminDashboard() {
     const [specialUserId, setSpecialUserId] = useState("");
@@ -27,16 +28,15 @@ export default function AdminDashboard() {
 
     const fetchSpecialUsers = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/special-users`);
-            const data = await response.json();
-            
-            if (response.ok) {
-                const active = data.data.filter(user => user.status === 'active');
-                const removed = data.data.filter(user => user.status === 'removed');
+            const result = await getSpecialUsers();
+
+            if (result.success) {
+                const active = result.data.filter(user => user.status === 'active');
+                const removed = result.data.filter(user => user.status === 'removed');
                 setAddedUsers(active);
                 setRemovedUsers(removed);
             } else {
-                setError(data.message);
+                setError(result.message);
             }
         } catch (err) {
             setError('Failed to fetch special users');
@@ -59,14 +59,9 @@ export default function AdminDashboard() {
             };
 
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/special-users`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newUser),
-                });
+                const result = await createSpecialUser(newUser);
 
-                const result = await response.json();
-                if (response.ok) {
+                if (result.success) {
                     await fetchSpecialUsers();
                     setSpecialUserId("");
                     setSpecialUserName("");
@@ -92,14 +87,12 @@ export default function AdminDashboard() {
             setError(null);
 
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/special-users/${removeId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: "removed", institution }),
+                const result = await updateSpecialUser(removeId, {
+                    status: "removed",
+                    institution
                 });
 
-                const result = await response.json();
-                if (response.ok) {
+                if (result.success) {
                     await fetchSpecialUsers();
                     setRemoveId("");
                     setInstitution("");
@@ -199,8 +192,8 @@ export default function AdminDashboard() {
                             <option value="army">Army</option>
                             <option value="medical team">Medical Team</option>
                         </select>
-                        <Button 
-                            onClick={handleAddUser} 
+                        <Button
+                            onClick={handleAddUser}
                             className="w-full rounded-full"
                             disabled={isLoading}
                         >
@@ -225,8 +218,8 @@ export default function AdminDashboard() {
                             onChange={(e) => setInstitution(e.target.value)}
                             className="mb-4"
                         />
-                        <Button 
-                            onClick={handleRemoveUser} 
+                        <Button
+                            onClick={handleRemoveUser}
                             className="bg-bracorange text-white font-bold py-2 w-full rounded-md"
                             disabled={isLoading}
                         >
