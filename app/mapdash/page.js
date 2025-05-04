@@ -1,13 +1,10 @@
 "use client";
 
-import "leaflet/dist/leaflet.css";
-import "leaflet-defaulticon-compatibility";
-import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-
 import { getSOSRequests } from "@/services/sosRequestService";
-
+import { useLeafletDynamicImport } from "@/hooks/useLeafletDynamicImport";
+// Dynamically import react-leaflet components with SSR disabled
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -25,8 +22,15 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
 });
 
 export default function Mapdash() {
+  useLeafletDynamicImport();
   const position = [23.685, 90.3563]; // Default center position
   const [sosLocations, setSosLocations] = useState([]);
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure the code runs only on the client side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     async function fetchSOSData() {
@@ -35,7 +39,7 @@ export default function Mapdash() {
         if (result && result.data) {
           setSosLocations(result.data); // Assuming response is an array of SOS data
         } else {
-          console.error("Failed to fetch SOS requests:", response.message);
+          console.error("Failed to fetch SOS requests:", result.message);
         }
       } catch (error) {
         console.error("Error fetching SOS requests:", error);
@@ -45,12 +49,17 @@ export default function Mapdash() {
     fetchSOSData();
   }, []);
 
+  if (!isClient) {
+    // Render nothing on the server side
+    return null;
+  }
+
   return (
     <MapContainer
       center={position}
       zoom={9}
       scrollWheelZoom={true}
-      className="h-120 w-full z-0"
+      className="h-120 w-full z-0 "
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
