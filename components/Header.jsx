@@ -42,6 +42,13 @@ export default function Header() {
                             MAP
                         </Button>
                     </Link>
+
+                    <Link href="/admindash">
+                        <Button className="bg-blue-700 text-secondary-foreground">
+                            Admin Dashboard
+                        </Button>
+                    </Link>
+
                     <Link href="/community">
                         <Button className="bg-green-700 text-secondary-foreground">
                             Community
