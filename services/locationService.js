@@ -1,4 +1,5 @@
 import axiosClient from "./axiosBase";
+import { getPreciseDistance } from 'geolib';
 
 export const getLocation = async (lat, long) => {
     try {
@@ -27,3 +28,12 @@ export const getLocationName = async (lat, long) => {
         };
     }
 };
+
+export function isWithinRange(center, point, range) {
+    const distance = getPreciseDistance(
+        { latitude: center[0], longitude: center[1] },
+        { latitude: point[0], longitude: point[1] },
+        1 // accuracy in metres (optional)
+    );
+    return distance <= range;
+}
