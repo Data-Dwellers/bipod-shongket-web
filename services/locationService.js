@@ -29,6 +29,16 @@ export const getLocationName = async (lat, long) => {
     }
 };
 
+/**
+const center = { latitude: 23.7600768, longitude: 90.4331264 };
+const nearby = { latitude: 23.7645,    longitude: 90.4375    };
+
+const rangeCheck = isWithinRange(center, point, 1000); 
+1000m
+
+rangeCheck will be either true or false
+ */
+
 export function isWithinRange(center, point, range) {
     const distance = getPreciseDistance(
         { latitude: center[0], longitude: center[1] },
