@@ -17,6 +17,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import Link from "next/link";
 
 export default function Page() {
     const [sosRequests, setSosRequests] = useState([]);
@@ -64,7 +65,7 @@ export default function Page() {
                             if (request.location && request.location.lat && request.location.long && request.isActive === true) {
                                 const requestLocation = [request.location.lat, request.location.long];
                                 // Check if the request is within 5km of the user
-                                return isWithinRange(userLocation, requestLocation, 1000);
+                                return isWithinRange(userLocation, requestLocation, 20000);
                             }
                             return false;
                         });
@@ -286,9 +287,16 @@ export default function Page() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Close</AlertDialogCancel>
-                        <AlertDialogAction className="bg-red-600 hover:bg-red-700">
-                            Contact Emergency Services
-                        </AlertDialogAction>
+                        <Link href="/singleusermap">
+                            <AlertDialogAction className="bg-yellow-100 hover:bg-yellow-300">
+                                Show On Map
+                            </AlertDialogAction>
+                        </Link>
+                        <Link href="/emergency">
+                            <AlertDialogAction className="bg-red-300 hover:bg-red-500">
+                                Contact Emergency Services
+                            </AlertDialogAction>
+                        </Link>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
