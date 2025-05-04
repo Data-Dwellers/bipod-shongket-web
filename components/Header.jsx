@@ -7,17 +7,18 @@ import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { UserNav } from "./UserNav";
+import { User } from "lucide-react";
 
 export default function Header() {
-    const { user } = useContext(AuthContext);
-    return (
-        <>
-            <div className="flex justify-between items-center px-5 py-5">
-                <Link href="/">
-                    <h1 className="text-center flex items-center justify-center font-bold text-2xl text-red-600">
-                        Bipod Shongket
-                    </h1>
-                </Link>
+  const { user } = useContext(AuthContext);
+  return (
+    <>
+      <div className="flex justify-between items-center px-5 py-5">
+        <Link href="/">
+          <h1 className="text-center flex items-center justify-center font-bold text-2xl text-red-600">
+            Bipod Shongket
+          </h1>
+        </Link>
 
                 <div className="space-x-2 flex justify-around items-center">
                     {user ? (
@@ -42,13 +43,6 @@ export default function Header() {
                             MAP
                         </Button>
                     </Link>
-
-                    <Link href="/admindash">
-                        <Button className="bg-blue-700 text-secondary-foreground">
-                            Admin Dashboard
-                        </Button>
-                    </Link>
-
                     <Link href="/community">
                         <Button className="bg-green-700 text-secondary-foreground">
                             Community
@@ -61,7 +55,7 @@ export default function Header() {
                 </div>
             </div>
 
-            <Separator className="bg-red-600"></Separator>
-        </>
-    );
+      <Separator className="bg-red-600"></Separator>
+    </>
+  );
 }

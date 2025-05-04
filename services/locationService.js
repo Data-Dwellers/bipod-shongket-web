@@ -1,5 +1,5 @@
-import axiosClient from "./axiosBase";
 import { getPreciseDistance } from 'geolib';
+import axiosClient from "./axiosBase";
 
 export const getLocation = async (lat, long) => {
     try {
@@ -29,21 +29,28 @@ export const getLocationName = async (lat, long) => {
     }
 };
 
+
+
 /**
-const center = { latitude: 23.7600768, longitude: 90.4331264 };
-const nearby = { latitude: 23.7645,    longitude: 90.4375    };
-
-const rangeCheck = isWithinRange(center, point, 1000); 
+isWithinRange([23.7937, 90.4066], [23.7937, 90.4066], 1000);
 1000m
-
-rangeCheck will be either true or false
  */
-
 export function isWithinRange(center, point, range) {
+    // Convert coordinates to standard geolib format if they're in array form
+    const centerCoords = Array.isArray(center)
+        ? { latitude: center[0], longitude: center[1] }
+        : center;
+
+    const pointCoords = Array.isArray(point)
+        ? { latitude: point[0], longitude: point[1] }
+        : point;
+
+    // Calculate distance in meters using geolib's getPreciseDistance
     const distance = getPreciseDistance(
-        { latitude: center[0], longitude: center[1] },
-        { latitude: point[0], longitude: point[1] },
-        1 // accuracy in metres (optional)
+        centerCoords,
+        pointCoords
     );
+
+    // Return true if point is within range, false otherwise
     return distance <= range;
 }
