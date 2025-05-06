@@ -1,7 +1,10 @@
 "use client";
 import Banner from "@/components/Banner";
-import { getReports } from "@/services/reportService";
+import Loading from "@/components/Loading";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { summarizeReports } from "@/services/geminiService";
+import { getReports } from "@/services/reportService";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -36,25 +39,33 @@ export default function Home() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center p-20">
+      <Loading></Loading>
+    </div>;
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4">
       <Banner />
-
+      <Separator></Separator>
       {/* AI Summary Section */}
-      <div className="my-8 p-6 bg-gray-50 rounded-lg shadow">
-        <h2 className="text-2xl font-bold mb-4">Incident Analysis</h2>
-        <div className="whitespace-pre-line">{summary}</div>
-      </div>
-
+      <Card className="relative border-none">
+        <div className="absolute top-0 left-0 text-2xl">
+          ✨
+        </div>
+        <CardContent>
+          <div className="flex flex-col justify-center items-center">
+            <div className="text-2xl text-red-100 text-center">{summary}</div>
+          </div>
+        </CardContent>
+      </Card>
+      <Separator></Separator>
       {/* Individual Reports Section */}
       <div className="grid gap-4 mt-8">
         {reports.map((report) => (
           <div key={report._id} className="p-4 border rounded-lg">
-            <h3 className="text-xl font-semibold">
-              Incident Type: {report.incedentType}
+            <h3 className="text-xl text-red-300 font-semibold">
+              {report.incedentType}
             </h3>
             <p className="mt-2">{report.description}</p>
             <p className="text-sm text-gray-500 mt-2">
