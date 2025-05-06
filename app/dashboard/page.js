@@ -227,19 +227,18 @@ export default function Page() {
       <div className="mb-10 flex flex-col items-center">
         <Button
           size="lg"
-          className={`text-2xl p-8 ${
-            activeSOS
+          className={`text-2xl p-8 ${activeSOS
               ? "bg-green-600 hover:bg-green-700"
               : "bg-red-600 hover:bg-red-700"
-          } w-full max-w-md shadow-lg transition-all transform hover:scale-105`}
+            } w-full max-w-md shadow-lg transition-all transform hover:scale-105`}
           onClick={handleSOSToggle}
           disabled={activatingSOSState}
         >
           {activatingSOSState
             ? "Processing..."
             : activeSOS
-            ? "SOS ACTIVE - Click to Deactivate"
-            : "ACTIVATE SOS EMERGENCY"}
+              ? "SOS ACTIVE - Click to Deactivate"
+              : "ACTIVATE SOS EMERGENCY"}
         </Button>
         {activeSOS && (
           <p className="mt-2 text-center text-red-500 font-semibold">
@@ -344,7 +343,7 @@ export default function Page() {
           <AlertDialogFooter>
             <AlertDialogCancel>Close</AlertDialogCancel>
             <Link
-              href={`/singleusermap?lat=${selectedSOS.location.lat}&long=${selectedSOS.location.long}`}
+              href={`/singleusermap?lat=${selectedSOS?.location.lat}&long=${selectedSOS?.location.long}`}
             >
               <AlertDialogAction className="bg-yellow-100 hover:bg-yellow-300">
                 Show On Map
