@@ -2,8 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useLeafletDynamicImport } from "@/hooks/useLeafletDynamicImport";
+
 // Dynamically import react-leaflet components with SSR disabled
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -17,20 +18,12 @@ const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
   { ssr: false }
 );
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
 
-export default function Mapdash() {
+function MapComponent() {
   const searchParams = useSearchParams();
   const lat = parseFloat(searchParams.get("lat"));
   const long = parseFloat(searchParams.get("long"));
   useLeafletDynamicImport();
-
-  // Ensure the code runs only on the client side
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   if (!lat || !long) {
     return <div>No location data provided</div>;
@@ -51,5 +44,13 @@ export default function Mapdash() {
         <Marker position={[lat, long]} />
       </MapContainer>
     </div>
+  );
+}
+
+export default function Mapdash() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MapComponent />
+    </Suspense>
   );
 }
