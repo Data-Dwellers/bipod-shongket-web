@@ -39,36 +39,34 @@ export default function Home() {
   }, []);
 
   if (loading) {
-    return <div className="flex justify-center items-center p-20">
-      <Loading></Loading>
-    </div>;
+    return (
+      <div className="flex justify-center items-center p-20">
+        <Loading></Loading>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4">
       <Banner />
       <Separator></Separator>
-      {/* AI Summary Section */}
       <Card className="relative border-none">
-        <div className="absolute top-0 left-0 text-2xl">
-          ✨
-        </div>
+        <div className="absolute top-0 left-0 text-2xl">✨</div>
         <CardContent>
           <div className="flex flex-col justify-center items-center">
-            <div className="text-2xl text-red-100 text-center">{summary}</div>
+            <div className="text-2xl text-red-600 text-center">{summary}</div>
           </div>
         </CardContent>
       </Card>
       <Separator></Separator>
-      {/* Individual Reports Section */}
       <div className="grid gap-4 mt-8">
         {reports.map((report) => (
           <div key={report._id} className="p-4 border rounded-lg">
-            <h3 className="text-xl text-red-300 font-semibold">
+            <h3 className="text-xl text-red-600 font-semibold">
               {report.incedentType}
             </h3>
             <p className="mt-2">{report.description}</p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-black mt-2">
               {new Date(report.reportingDate).toLocaleDateString()}
             </p>
           </div>
