@@ -20,40 +20,43 @@ export default function Header() {
           </h1>
         </Link>
 
-                <div className="space-x-2 flex justify-around items-center">
-                    {user ? (
-                        <UserNav />
-                    ) : (
-                        <>
-                            <Link href="/log-in">
-                                <Button>Log In</Button>
-                            </Link>
-                            <Link href="/register">
-                                <Button>Register</Button>
-                            </Link>
-                        </>
-                    )}
-                    <Link href="/allsosrequest">
-                        <Button className="bg-red-700 text-secondary-foreground">
-                            See All Global Request
-                        </Button>
-                    </Link>
-                    <Link href="/mapdash">
-                        <Button className="bg-red-700 text-secondary-foreground">
-                            MAP
-                        </Button>
-                    </Link>
-                    <Link href="/community">
-                        <Button className="bg-green-700 text-secondary-foreground">
-                            Community
-                        </Button>
-                    </Link>
-                    <Link href="/about">
+        <div className="space-x-2 flex justify-around items-center">
+          {user ? (
+            <>
+              <UserNav />
+              <Link href="/allsosrequest">
+                <Button className="bg-red-700 text-secondary-foreground">
+                  See All Global Request
+                </Button>
+              </Link>
+              <Link href="/mapdash">
+                <Button className="bg-red-700 text-secondary-foreground">
+                  MAP
+                </Button>
+              </Link>
+              <Link href="/community">
+                <Button className="bg-green-700 text-secondary-foreground">
+                  Community
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/log-in">
+                <Button>Log In</Button>
+              </Link>
+              <Link href="/register">
+                <Button>Register</Button>
+              </Link>
+            </>
+          )}
+
+          {/* <Link href="/about">
                         <Button>About</Button>
-                    </Link>
-                    <ThemeToggle></ThemeToggle>
-                </div>
-            </div>
+                    </Link> */}
+          <ThemeToggle></ThemeToggle>
+        </div>
+      </div>
 
       <Separator className="bg-red-600"></Separator>
     </>
